@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>Endless Popup Prank</title>
+    <script>
+      let messages = [
+        "CRITICAL ERROR: SYSTEM FAILURE!",
+        "WARNING: MALWARE DETECTED!",
+        "Your system has been compromised!",
+        "FATAL ERROR: HARD DRIVE CORRUPTED!",
+        "SYSTEM ALERT: VIRUS UPLOADING DATA!",
+        "Blue Screen of Death Imminent!",
+        "Your computer is not safe!",
+        "Hack detected! Disabling antivirus...",
+        "Data Wipe in Progress...",
+        "Unauthorized Access Detected!"
+      ];
+
+      function spawnPopup() {
+        let screenWidth = window.screen.width;
+        let screenHeight = window.screen.height;
+        
+        let randomX = Math.floor(Math.random() * (screenWidth - 300)); // Random X position
+        let randomY = Math.floor(Math.random() * (screenHeight - 150)); // Random Y position
+        let randomMessage = messages[Math.floor(Math.random() * messages.length)]; // Random error message
+
+        let newPopup = window.open("", "", `width=300,height=150,top=${randomY},left=${randomX}`);
+
+        if (newPopup) {
+          newPopup.document.write(`
+            <html>
+              <head><title>WARNING</title></head>
+              <body style="background-color:black; color:red; font-family:Arial, sans-serif; text-align:center;">
+                <h2>${randomMessage}</h2>
+                <p>Your system is in danger!</p>
+                <button onclick="spawnDuplicate();">OK</button>
+                <script>
+                  let dx = Math.random() * 4 - 2, dy = Math.random() * 4 - 2;
+                  
+                  function movePopup() {
+                    let x = window.screenX, y = window.screenY;
+                    if (x + window.outerWidth >= screen.availWidth || x <= 0) dx = -dx;
+                    if (y + window.outerHeight >= screen.availHeight || y <= 0) dy = -dy;
+                    window.moveBy(dx, dy);
+                    setTimeout(movePopup, 30);
+                  }
+                  movePopup();
+
+                  function spawnDuplicate() {
+                    for (let i = 0; i < 2; i++) { 
+                      window.open('', '', 'width=300,height=150'); 
+                    }
+                  }
+
+                  window.onbeforeunload = function(event) {
+                    event.preventDefault();
+                    event.returnValue = "";
+                    spawnDuplicate();
+                  };
+
+                  document.documentElement.requestFullscreen().catch(console.log);
+                <\/script>
+              </body>
+            </html>
+          `);
+        }
+      }
+
+      window.onload = function() {
+        for (let i = 0; i < 50; i++) { 
+          spawnPopup();
+        }
+      };
+    </script>
+  </head>
+  <body></body>
+</html>
+
