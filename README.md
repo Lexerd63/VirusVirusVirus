@@ -1,2 +1,3 @@
-# VirusVirusVirus
-This is a Repository full of viruses me and my friend are making
+These viruses are for entertainment purposes only
+we are not responsible for any damage done to your computer
+run at your own risk
