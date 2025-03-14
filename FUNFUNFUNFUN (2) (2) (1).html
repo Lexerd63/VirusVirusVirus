@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>CRITICAL SYSTEM ERROR</title>
+    <script>
+      let messages = [
+        "CRITICAL ERROR: SYSTEM FAILURE!",
+        "WARNING: MALWARE DETECTED!",
+        "FATAL ERROR: HARD DRIVE CORRUPTED!",
+        "SYSTEM ALERT: VIRUS UPLOADING DATA!",
+        "TROJAN DETECTED! SYSTEM BREACH!"
+      ];
+
+      let sounds = [
+        "https://www.myinstants.com/media/sounds/windows-critical-error.mp3",
+        "https://www.myinstants.com/media/sounds/windows-xp-error-sound.mp3",
+        "https://www.myinstants.com/media/sounds/siren.mp3"
+      ];
+
+      function playSound() {
+        let sound = new Audio(sounds[Math.floor(Math.random() * sounds.length)]);
+        sound.loop = true;
+        sound.play();
+      }
+
+      function spawnPopup() {
+        let screenWidth = window.screen.width;
+        let screenHeight = window.screen.height;
+        let randomX = Math.random() * (screenWidth - 400);
+        let randomY = Math.random() * (screenHeight - 200);
+        let randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+        let newPopup = window.open("", "", `width=400,height=200,top=${randomY},left=${randomX}`);
+        
+        if (newPopup) {
+          newPopup.document.write(`
+            <html>
+              <head><title>WARNING</title></head>
+              <body style="background-color:black; color:red; font-family:Arial, sans-serif; text-align:center;">
+                <h2>${randomMessage}</h2>
+                <p>Your system is in danger!</p>
+                <button onclick="window.open('', '', 'width=400,height=200'); window.close();">OK</button>
+                <script>
+                  document.body.style.backgroundColor = setInterval(() => {
+                    document.body.style.backgroundColor = document.body.style.backgroundColor === 'black' ? 'red' : 'black';
+                  }, 200);
+                  window.onbeforeunload = function(event) {
+                    event.preventDefault();
+                    event.returnValue = "";
+                    setTimeout(() => { window.open('', '', 'width=400,height=200'); }, 100);
+                  };
+                <\/script>
+              </body>
+            </html>
+          `);
+        }
+      }
+
+      function startMadness() {
+        document.documentElement.requestFullscreen();
+        playSound();
+        
+        // Spawn 50 popups at once 😈🔥
+        for (let i = 0; i < 50; i++) {
+          setTimeout(spawnPopup, i * 200);
+        }
+
+        // Reopen popups if the tab is closed
+        window.onbeforeunload = function() {
+          setTimeout(function() {
+            for (let i = 0; i < 50; i++) {
+              spawnPopup();
+            }
+          }, 500);
+        };
+      }
+
+      document.onclick = startMadness;
+    </script>
+  </head>
+  <body style="text-align:center; font-family:Arial, sans-serif;">
+    <h1>Click anywhere to activate.</h1>
+  </body>
+</html>
