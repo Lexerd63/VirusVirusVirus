@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shrek Has Taken Over</title>
+    <style>
+        body {
+            background: url('file:///home/chronos/u-edc584152adc650ee50f9e3a965c4475fcaa76cf/MyFiles/Downloads/images.webp') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            margin: 0;
+        }
+    </style>
+    <script>
+        function forceFullScreen() {
+            document.documentElement.requestFullscreen().catch(console.log);
+        }
+
+        function spawnPopup() {
+            let screenWidth = window.screen.width;
+            let screenHeight = window.screen.height;
+
+            let randomX = Math.floor(Math.random() * (screenWidth - 400)); 
+            let randomY = Math.floor(Math.random() * (screenHeight - 300));
+
+            let newPopup = window.open("", "", `width=400,height=300,top=${randomY},left=${randomX}`);
+
+            if (newPopup) {
+                newPopup.document.write(`
+                    <html>
+                    <head>
+                        <title>Shrek.exe</title>
+                        <style>
+                            body { background-color: black; color: green; font-family: Arial, sans-serif; text-align: center; margin: 0; }
+                            h2 { animation: flicker 1s infinite alternate; }
+                            @keyframes flicker {
+                                0% { opacity: 1; }
+                                50% { opacity: 0.5; }
+                                100% { opacity: 1; }
+                            }
+                            img { width: 100%; height: auto; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>SHREK IS WATCHING...</h2>
+                        <img src="file:///home/chronos/u-edc584152adc650ee50f9e3a965c4475fcaa76cf/MyFiles/Downloads/images.webp">
+                        <script>
+                            let dx = (Math.random() * 4) + 2;
+                            let dy = (Math.random() * 4) + 2;
+                            let x = window.screenX;
+                            let y = window.screenY;
+                            function bounce() {
+                                x += dx;
+                                y += dy;
+                                if (x + 400 >= screen.width || x <= 0) dx *= -1;
+                                if (y + 300 >= screen.height || y <= 0) dy *= -1;
+                                window.moveTo(x, y);
+                            }
+                            setInterval(bounce, 50);
+                            window.onbeforeunload = function() {
+                                window.open('', '', 'width=400,height=300'); 
+                                return "You can't escape Shrek!";
+                            };
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+            }
+        }
+
+        function startPrank() {
+            forceFullScreen();
+            for (let i = 0; i < 50; i++) {
+                spawnPopup();
+            }
+        }
+
+        document.addEventListener("keydown", function(event) {
+            event.preventDefault();
+        });
+
+        window.onload = startPrank;
+    </script>
+</head>
+<body>
+</body>
+</html>
